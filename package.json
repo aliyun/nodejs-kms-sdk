@@ -5,8 +5,8 @@
   "main": "lib/index.js",
   "scripts": {
     "lint": "eslint --fix lib/*.js test/*.js",
-    "test": "mocha -R spec test/*.test.js",
-    "cov": "nyc --reporter=html --reporter=text --reporter=lcov mocha -R spec test/*.test.js",
+    "test": "mocha -R spec test/*.test.js  --timeout 15000",
+    "cov": "nyc --reporter=html --reporter=text --reporter=lcov mocha -R spec test/*.test.js  --timeout 15000",
     "ci": "npm run lint && npm run cov && codecov",
     "clean": "rm -rf coverage"
   },
