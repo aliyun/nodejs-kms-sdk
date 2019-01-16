@@ -1,0 +1,44 @@
+{
+  "name": "@alicloud/kms-sdk",
+  "version": "0.0.0",
+  "description": "alibaba cloud kms client for node.js",
+  "main": "lib/index.js",
+  "scripts": {
+    "lint": "eslint --fix lib/*.js test/*.js",
+    "test": "mocha -R spec test/*.test.js",
+    "cov": "nyc --reporter=html --reporter=text --reporter=lcov mocha -R spec test/*.test.js",
+    "ci": "npm run lint && npm run cov && codecov",
+    "clean": "rm -rf coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aliyun/nodejs-kms-sdk.git"
+  },
+  "keywords": [
+    "alibaba cloud",
+    "kms",
+    "sdk"
+  ],
+  "author": "Alibaba Cloud SDK",
+  "license": "MIT",
+  "devDependencies": {
+    "muk": "^0.5.3",
+    "codecov": "^3.1.0",
+    "eslint": "^5.10.0",
+    "expect.js": "^0.3.1",
+    "mm": "^2.4.1",
+    "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
+    "rewire": "^4.0.1"
+  },
+  "dependencies": {
+    "@alicloud/http-core-sdk": "^1.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/aliyun/nodejs-kms-sdk/issues"
+  },
+  "homepage": "https://github.com/aliyun/nodejs-kms-sdk#readme",
+  "files": [
+    "lib"
+  ]
+}

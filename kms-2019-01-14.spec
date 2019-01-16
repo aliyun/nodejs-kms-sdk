@@ -39,7 +39,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -76,7 +76,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -114,7 +114,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -151,7 +151,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -187,7 +187,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -223,7 +223,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -259,7 +259,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -294,7 +294,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -330,7 +330,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -366,7 +366,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -404,7 +404,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -443,7 +443,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -481,7 +481,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -519,7 +519,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -556,7 +556,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -594,7 +594,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -631,7 +631,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -668,7 +668,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
@@ -705,7 +705,7 @@ module kms {
 
     return @json(__response);
   } runtime {
-    timeout = 3000,
+    timeout = 10000,
     timeouted = 'retry',
     retry = {
       retryable = true,
