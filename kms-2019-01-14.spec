@@ -1,39 +1,43 @@
 // https://help.aliyun.com/document_detail/69005.html
 
 module kms {
+
   model RuntimeObject = {
+    ignoreSSL: boolean,
     max-attempts: number,
     backoff_policy: string,
     backoff_period: number
   }
 
-  model QueryObject = {
+  type @default = (string, string): string
+  type @defaultNumber = (number, number): number
+  type @getQuery = (object, $Request): object
+  type @json = async ($Response): object
+  type @is5xx = ($Response): boolean
 
+  model CancelKeyDeletionQuery = {
+    Action: string,
+    KeyId: string
   }
 
-  type @default = (string, string): string
-  type @default_number = (number, number): number
-  type @get_path = (object): string
-  type @json = async ($Response): object
-  type @is_5xx = ($Response): boolean
-
   /**
-   * @description cancel key deletion which can reenable this key
+   * @description cancel key deletion which can enable this key
    * @see https://help.aliyun.com/document_detail/44197.html
    * @param query
    *   - Action {string} required
    *   - KeyId {string} required: global unique identifier
    */
-  api CancelKeyDeletion(query: QueryObject, runtime: RuntimeObject) {
+  api CancelKeyDeletion(query: CancelKeyDeletionQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -44,13 +48,19 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model CreateAliasQuery = {
+    Action: string,
+    KeyId: string,
+    AliasName: string
   }
 
   /**
@@ -61,16 +71,17 @@ module kms {
    *   - KeyId {string} required: global unique identifier
    *   - AliasName {string} required: cmk alias, prefix must be 'alias/'
    */
-  api CreateAlias(query: QueryObject, runtime: RuntimeObject) {
+  api CreateAlias(query: CreateAliasQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -81,13 +92,20 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model CreateKeyQuery = {
+    Action: string,
+    Origin: string,
+    Description: string,
+    KeyUsage: string
   }
 
   /**
@@ -99,16 +117,17 @@ module kms {
    *   - Description {string} optional: description of key
    *   - KeyUsage {string} optional: usage of key, default is ENCRYPT/DECRYPT
    */
-  api CreateKey(query: QueryObject, runtime: RuntimeObject) {
+  api CreateKey(query: CreateKeyQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -119,13 +138,19 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model DecryptQuery = {
+    Action: string,
+    CiphertextBlob: string,
+    EncryptionContext: string
   }
 
   /**
@@ -136,16 +161,17 @@ module kms {
    *   - CiphertextBlob {string} required: ciphertext to be decrypted.
    *   - EncryptionContext {string} optional: key/value string, must be {string: string}
    */
-  api Decrypt(query: QueryObject, runtime: RuntimeObject) {
+  api Decrypt(query: DecryptQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -156,13 +182,18 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model DeleteAliasQuery = {
+    Action: string,
+    AliasName: string
   }
 
   /**
@@ -172,16 +203,17 @@ module kms {
    *   - Action {string} required
    *   - AliasName {string} required: alias name, prefix must be 'alias/'
    */
-  api DeleteAlias(query: QueryObject, runtime: RuntimeObject) {
+  api DeleteAlias(query: DeleteAliasQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -192,13 +224,18 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model DeleteKeyMaterialQuery = {
+    Action: string,
+    KeyId: string
   }
 
   /**
@@ -208,16 +245,17 @@ module kms {
    *   - Action {string} required
    *   - KeyId {string} required: global unique identifier
    */
-  api DeleteKeyMaterial(query: QueryObject, runtime: RuntimeObject) {
+  api DeleteKeyMaterial(query: DeleteKeyMaterialQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -228,13 +266,18 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model DescribeKeyQuery = {
+    Action: string,
+    KeyId: string
   }
 
   /**
@@ -244,16 +287,17 @@ module kms {
    *   - Action {string} required
    *   - KeyId {string} required: global unique identifier
    */
-  api DescribeKey(query: QueryObject, runtime: RuntimeObject) {
+  api DescribeKey(query: DescribeKeyQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -264,13 +308,17 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model DescribeRegionsQuery = {
+    Action: string
   }
 
   /**
@@ -279,16 +327,17 @@ module kms {
    * @param query
    *   - Action {string} required
    */
-  api DescribeRegions(query: QueryObject, runtime: RuntimeObject) {
+  api DescribeRegions(query: DescribeRegionsQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -299,13 +348,18 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model DisableKeyQuery = {
+    Action: string,
+    KeyId: string
   }
 
   /**
@@ -315,16 +369,17 @@ module kms {
    *   - Action {string} required
    *   - KeyId {string} required: global unique identifier
    */
-  api DisableKey(query: QueryObject, runtime: RuntimeObject) {
+  api DisableKey(query: DisableKeyQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -335,13 +390,18 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model EnableKeyQuery = {
+    Action: string,
+    KeyId: string
   }
 
   /**
@@ -351,16 +411,17 @@ module kms {
    *   - Action {string} required
    *   - KeyId {string} required: global unique identifier
    */
-  api EnableKey(query: QueryObject, runtime: RuntimeObject) {
+  api EnableKey(query: EnableKeyQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -371,13 +432,20 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model EncryptQuery = {
+    Action: string,
+    KeyId: string,
+    Plaintext: string,
+    EncryptionContext: string
   }
 
   /**
@@ -389,16 +457,17 @@ module kms {
    *   - Plaintext {string} required: plaintext to be encrypted (must be Base64 encoded)
    *   - EncryptionContext {string} optional: key/value string, must be {string: string}
    */
-  api Encrypt(query: QueryObject, runtime: RuntimeObject) {
+  api Encrypt(query: EncryptQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -409,13 +478,21 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model GenerateDataKeyQuery = {
+    Action: string,
+    KeyId: string,
+    KeySpec: string,
+    NumberOfBytes: number,
+    EncryptionContext: string
   }
 
   /**
@@ -428,16 +505,17 @@ module kms {
    *   - NumberOfBytes {number} optional: length of key
    *   - EncryptionContext {string} optional: key/value string, must be {string: string}
    */
-  api GenerateDataKey(query: QueryObject, runtime: RuntimeObject) {
+  api GenerateDataKey(query: GenerateDataKeyQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -448,13 +526,20 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model GetParametersForImportQuery = {
+    Action: string,
+    KeyId: string,
+    WrappingAlgorithm: string,
+    WrappingKeySpec: string
   }
 
   /**
@@ -466,16 +551,17 @@ module kms {
    *   - WrappingAlgorithm {string} required: algorithm for encrypting key material, RSAES_PKCS1_V1_5, RSAES_OAEP_SHA_1 or RSAES_OAEP_SHA_256
    *   - WrappingKeySpec {string} required: public key type used to encrypt key material, RSA_2048
    */
-  api GetParametersForImport(query: QueryObject, runtime: RuntimeObject) {
+  api GetParametersForImport(query: GetParametersForImportQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -486,13 +572,21 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model ImportKeyMaterialQuery = {
+    Action: string,
+    KeyId: string,
+    EncryptedKeyMaterial: string,
+    ImportToken: string,
+    KeyMaterialExpireUnix: number
   }
 
   /**
@@ -505,16 +599,17 @@ module kms {
    *   - ImportToken {string} required: obtained by calling GetParametersForImport
    *   - KeyMaterialExpireUnix {timestamp} optional: Key material expiration time
    */
-  api ImportKeyMaterial(query: QueryObject, runtime: RuntimeObject) {
+  api ImportKeyMaterial(query: ImportKeyMaterialQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -525,13 +620,19 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model ListAliasesQuery = {
+    Action: string,
+    PageNumber: number,
+    PageSize: number
   }
 
   /**
@@ -542,16 +643,17 @@ module kms {
    *   - PageNumber {number} optional: current page, default 1
    *   - PageSize {number} optional: result count (0 - 100), default 10
    */
-  api ListAliases(query: QueryObject, runtime: RuntimeObject) {
+  api ListAliases(query: ListAliasesQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -562,13 +664,20 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model ListAliasesByKeyIdQuery = {
+    Action: string,
+    KeyId: string,
+    PageNumber: number,
+    PageSize: number
   }
 
   /**
@@ -580,16 +689,17 @@ module kms {
    *   - PageNumber {number} optional: current page, default 1
    *   - PageSize {number} optional: result count (0 - 100), default 10
    */
-  api ListAliasesByKeyId(query: QueryObject, runtime: RuntimeObject) {
+  api ListAliasesByKeyId(query: ListAliasesByKeyIdQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -600,13 +710,19 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model ListKeysQuery = {
+    Action: string,
+    PageNumber: number,
+    PageSize: number
   }
 
   /**
@@ -617,16 +733,17 @@ module kms {
    *   - PageNumber {number} optional: current page, default 1
    *   - PageSize {number} optional: result count (0 - 100), default 10
    */
-  api ListKeys(query: QueryObject, runtime: RuntimeObject) {
+  api ListKeys(query: ListKeysQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -637,13 +754,19 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model ScheduleKeyDeletionQuery = {
+    Action: string,
+    KeyId: string,
+    PendingWindowInDays: number
   }
 
   /**
@@ -654,16 +777,17 @@ module kms {
    *   - KeyId {string} required: global unique identifier
    *   - PendingWindowInDays {number} required: key pre-delete cycle, [7, 30]
    */
-  api ScheduleKeyDeletion(query: QueryObject, runtime: RuntimeObject) {
+  api ScheduleKeyDeletion(query: ScheduleKeyDeletionQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -674,13 +798,19 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
+  }
+
+  model UpdateAliasQuery = {
+    Action: string,
+    KeyId: string,
+    AliasName: string
   }
 
   /**
@@ -691,16 +821,17 @@ module kms {
    *   - KeyId {string} required: global unique identifier
    *   - AliasName {string} required: the alias to be operated, prefix must be 'alias/'
    */
-  api UpdateAlias(query: QueryObject, runtime: RuntimeObject) {
+  api UpdateAlias(query: UpdateAliasQuery, runtime: RuntimeObject) {
     protocol = 'https';
     method = 'GET';
-    pathname = @get_path(query);
+    pathname = '/';
+    query = @getQuery(query, __request);
 
     headers = {
       host = @endpoint
     };
   } returns {
-    if (@is_5xx(__response)) {
+    if (@is5xx(__response)) {
       retry;
     }
 
@@ -711,12 +842,12 @@ module kms {
     retry = {
       retryable = true,
       policy = 'simple',
-      max-attempts = @default_number(runtime.max-attempts, 3)
+      max-attempts = @defaultNumber(runtime.max-attempts, 3)
     },
     backoff = {
       policy = @default(runtime.backoff_policy, 'no'),
-      period = @default_number(runtime.backoff_period, 1)
+      period = @defaultNumber(runtime.backoff_period, 1)
     },
-    ignoreSSL = false
+    ignoreSSL = runtime.ignoreSSL
   }
 }
