@@ -65,7 +65,8 @@ describe('http retry should success', function () {
     accessKey: 'access_key',
     secretKey: 'secret_key'
   });
-  const runtimeOption = { backoff_policy: 'fixed', backoff_period: 10 };
+  const runtimeOption = { backoff_policy: 'fixed', backoff_period: 10, ignoreSSL: false };
+  const authOption = { ignoreSSL: false };
   const retry = 2;
   const keyId = 'test';
   const alias = 'test';
@@ -82,7 +83,7 @@ describe('http retry should success', function () {
 
   it(`describe regions after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.describeRegions();
+    let res = await client.describeRegions(authOption);
     expect(Array.isArray(res.Regions.Region)).to.be.ok();
     // with backoff_period
     res = await client.describeRegions(runtimeOption);
@@ -91,7 +92,7 @@ describe('http retry should success', function () {
 
   it(`create key after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.createKey('Aliyun_KMS', `unit test create key ${new Date().toLocaleString()}`, 'ENCRYPT/DECRYPT');
+    let res = await client.createKey('Aliyun_KMS', `unit test create key ${new Date().toLocaleString()}`, 'ENCRYPT/DECRYPT', authOption);
     let keyMetadata = res.KeyMetadata;
     expect(keyMetadata && typeof keyMetadata === 'object').to.be.ok();
     expect(keyMetadata.KeyState).to.be('Enabled');
@@ -108,7 +109,7 @@ describe('http retry should success', function () {
 
   it(`list keys after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.listKeys(1, 100);
+    let res = await client.listKeys(1, 100, authOption);
     expect(Array.isArray(res.Keys.Key)).to.be.ok();
     // with backoff_period
     res = await client.listKeys(1, 100, runtimeOption);
@@ -117,7 +118,7 @@ describe('http retry should success', function () {
 
   it(`describe key after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.describeKey(keyId);
+    let res = await client.describeKey(keyId, authOption);
     let keyMetadata = res.KeyMetadata;
     expect(keyMetadata && typeof keyMetadata === 'object').to.be.ok();
     expect(keyMetadata.KeyState).to.be('Enabled');
@@ -132,7 +133,7 @@ describe('http retry should success', function () {
     // encrypt
     // with no backoff_period
     const plaintext = 'hello kms sdk for node.js';
-    let res = await client.encrypt(keyId, plaintext.toString('base64'), JSON.stringify({ k: 'v' }));
+    let res = await client.encrypt(keyId, plaintext.toString('base64'), JSON.stringify({ k: 'v' }), authOption);
     expect(res && typeof res === 'object').to.be.ok();
     expect(res.HttpStatus !== 400).to.be.ok();
     let blob = res.CiphertextBlob;
@@ -146,7 +147,7 @@ describe('http retry should success', function () {
 
     // decrypt
     // with no backoff_period
-    let res1 = await client.decrypt(blob, JSON.stringify({ k: 'v' }));
+    let res1 = await client.decrypt(blob, JSON.stringify({ k: 'v' }), authOption);
     expect(res1 && typeof res1 === 'object').to.be.ok();
     expect(res1.HttpStatus !== 400).to.be.ok();
     expect(res1.Plaintext).to.be(plaintext);
@@ -160,7 +161,7 @@ describe('http retry should success', function () {
   it(`disable & enable key after retry ${retry}times`, async function () {
     // disable key
     // with no backoff_period
-    let res = await client.disableKey(keyId);
+    let res = await client.disableKey(keyId, authOption);
     expect(res && typeof res === 'object').to.be.ok();
     expect(res.HttpStatus !== 400).to.be.ok();
     expect(res.RequestId && typeof res.RequestId === 'string').to.be.ok();
@@ -171,7 +172,7 @@ describe('http retry should success', function () {
     expect(res.RequestId && typeof res.RequestId === 'string').to.be.ok();
 
     // enable key
-    let res1 = await client.enableKey(keyId);
+    let res1 = await client.enableKey(keyId, authOption);
     expect(res1 && typeof res1 === 'object').to.be.ok();
     expect(res1.HttpStatus !== 400).to.be.ok();
     expect(res1.RequestId && typeof res1.RequestId === 'string').to.be.ok();
@@ -184,7 +185,7 @@ describe('http retry should success', function () {
 
   it(`generate local data key after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.generateDataKey(keyId);
+    let res = await client.generateDataKey(keyId, 'AES_256', 128, '{"k":"v"}', authOption);
     expect(res && typeof res === 'object').to.be.ok();
     expect(res.HttpStatus !== 400).to.be.ok();
     expect(typeof res.Plaintext === 'string').to.be.ok();
@@ -200,7 +201,7 @@ describe('http retry should success', function () {
   it(`import external key material after retry ${retry}times`, async function () {
     // get params for import
     // with no backoff_period
-    let res1 = await client.getParametersForImport(keyId, 'RSAES_OAEP_SHA_256', 'RSA_2048');
+    let res1 = await client.getParametersForImport(keyId, 'RSAES_OAEP_SHA_256', 'RSA_2048', authOption);
     let importTokean = res1.ImportToken;
     let publicKey = res1.PublicKey;
     expect(importTokean && typeof importTokean === 'string').to.be.ok();
@@ -214,13 +215,13 @@ describe('http retry should success', function () {
 
     // import key material
     // with no backoff_period
-    await client.importKeyMaterial(keyId, 'test'.toString('base64'), importTokean, Date.now() + 24 * 60 * 60 * 1000);
+    await client.importKeyMaterial(keyId, 'test'.toString('base64'), importTokean, Date.now() + 24 * 60 * 60 * 1000, authOption);
     // with backoff_period
     await client.importKeyMaterial(keyId, 'test'.toString('base64'), importTokean, Date.now() + 24 * 60 * 60 * 1000, runtimeOption);
 
     // delete key material
     // with no backoff_period
-    let res3 = await client.deleteKeyMaterial(keyId);
+    let res3 = await client.deleteKeyMaterial(keyId, authOption);
     expect(res3 && typeof res3 === 'object').to.be.ok();
     expect(res3.HttpStatus !== 400).to.be.ok();
     expect(res3.RequestId && typeof res3.RequestId === 'string').to.be.ok();
@@ -234,7 +235,7 @@ describe('http retry should success', function () {
   it(`delete key & cancel key deletion after retry ${retry}times`, async function () {
     // delete key
     // with no backoff_period
-    let res = await client.scheduleKeyDeletion(keyId, 7);
+    let res = await client.scheduleKeyDeletion(keyId, 7, authOption);
     expect(res && typeof res === 'object').to.be.ok();
     expect(res.HttpStatus !== 400).to.be.ok();
     expect(res.RequestId && typeof res.RequestId === 'string').to.be.ok();
@@ -245,7 +246,7 @@ describe('http retry should success', function () {
     expect(res.RequestId && typeof res.RequestId === 'string').to.be.ok();
 
     // cancel deletion
-    let res1 = await client.cancelKeyDeletion(keyId);
+    let res1 = await client.cancelKeyDeletion(keyId, authOption);
     expect(res1 && typeof res1 === 'object').to.be.ok();
     expect(res1.HttpStatus !== 400).to.be.ok();
     // with backoff_period
@@ -256,7 +257,7 @@ describe('http retry should success', function () {
 
   it(`create alias after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.createAlias(keyId, alias);
+    let res = await client.createAlias(keyId, alias, authOption);
     expect(res && typeof res === 'object').to.be.ok();
     expect(res.HttpStatus !== 400).to.be.ok();
     expect(res.RequestId && typeof res.RequestId === 'string').to.be.ok();
@@ -269,7 +270,7 @@ describe('http retry should success', function () {
 
   it(`update alias after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.updateAlias(keyId, alias);
+    let res = await client.updateAlias(keyId, alias, authOption);
     expect(res && typeof res === 'object').to.be.ok();
     expect(res.HttpStatus !== 400).to.be.ok();
     expect(res.RequestId && typeof res.RequestId === 'string').to.be.ok();
@@ -282,7 +283,7 @@ describe('http retry should success', function () {
 
   it(`list aliases after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.listAliases(1, 100);
+    let res = await client.listAliases(1, 100, authOption);
     expect(res.TotalCount).to.be(2);
     expect(Array.isArray(res.Aliases.Alias)).to.be.ok();
     expect(res.Aliases.Alias.length).to.be(2);
@@ -295,7 +296,7 @@ describe('http retry should success', function () {
 
   it(`list alias by id after retry ${retry}times`, async function () {
     // with no backoff_period
-    let res = await client.listAliasesByKeyId(keyId, 1, 100);
+    let res = await client.listAliasesByKeyId(keyId, 1, 100, authOption);
     expect(res.TotalCount).to.be(1);
     expect(Array.isArray(res.Aliases.Alias)).to.be.ok();
     // with backoff_period
@@ -306,7 +307,7 @@ describe('http retry should success', function () {
 
   it(`delete alias after retry ${retry} times`, async function () {
     // with no backoff_period
-    let res = await client.deleteAlias(alias);
+    let res = await client.deleteAlias(alias, authOption);
     expect(res && typeof res === 'object').to.be.ok();
     expect(res.HttpStatus !== 400).to.be.ok();
     expect(res.RequestId && typeof res.RequestId === 'string').to.be.ok();

@@ -65,16 +65,10 @@ describe('kms base client should success', function () {
     expect(client.__default(null, 'default')).to.be('default');
 
     // number
-    expect(client.__default_number(0, 3)).to.be(0);
-    expect(client.__default_number(1, 3)).to.be(1);
-    expect(client.__default_number(undefined, 3)).to.be(3);
-    expect(client.__default_number(null, 3)).to.be(3);
-  });
-
-  it('get path correct', function () {
-    const path = client.__get_path({ k1: 'v1' });
-    expect(typeof path).to.be('string');
-    expect(path.startsWith('/?')).to.be.ok();
+    expect(client.__defaultNumber(0, 3)).to.be(0);
+    expect(client.__defaultNumber(1, 3)).to.be(1);
+    expect(client.__defaultNumber(undefined, 3)).to.be(3);
+    expect(client.__defaultNumber(null, 3)).to.be(3);
   });
 
   it('parse response as json', async function () {
@@ -98,16 +92,16 @@ describe('kms base client should success', function () {
   });
 
   it('response 5xx', function () {
-    expect(client.__is_5xx({ statusCode: 499 })).to.be(false);
-    expect(client.__is_5xx({ statusCode: 500 })).to.be(true);
-    expect(client.__is_5xx({ statusCode: 501 })).to.be(true);
+    expect(client.__is5xx({ statusCode: 499 })).to.be(false);
+    expect(client.__is5xx({ statusCode: 500 })).to.be(true);
+    expect(client.__is5xx({ statusCode: 501 })).to.be(true);
   });
 
-  it('signature correct', function () {
-    const sign1 = client.getSignature({ k: 'v' });
-    expect(typeof sign1).to.be('string');
-    const sign2 = client.getSignature({ k: 'v' }, 'POST');
-    expect(typeof sign2).to.be('string');
+  it('get query correct', function () {
+    const sign1 = client.__getQuery({}, {});
+    expect(typeof sign1.Signature).to.be('string');
+    const sign2 = client.__getQuery({}, { method: 'POST' });
+    expect(typeof sign2.Signature).to.be('string');
     expect(sign1 !== sign2).to.be.ok();
   });
 });
