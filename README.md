@@ -1,7 +1,8 @@
 # Alibaba Cloud KMS client for Node.js
 
 [![npm version](https://badge.fury.io/js/@alicloud%2fkms-sdk.svg)](https://badge.fury.io/js/@alicloud%2fkms-sdk.svg)
-[![Build Status](https://api.travis-ci.org/aliyun/nodejs-kms-sdk.png?branch=master)](https://travis-ci.org/aliyun/nodejs-kms-sdk)
+[![Travis Build Status](https://api.travis-ci.org/aliyun/nodejs-kms-sdk.png?branch=master)](https://travis-ci.org/aliyun/nodejs-kms-sdk)
+[![Appveyor Build status](https://ci.appveyor.com/api/projects/status/5ow9oa34730r0wdy?svg=true)](https://ci.appveyor.com/project/hyj1991/nodejs-kms-sdk)
 [![codecov](https://codecov.io/gh/aliyun/nodejs-kms-sdk/branch/master/graph/badge.svg)](https://codecov.io/gh/aliyun/nodejs-kms-sdk)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
