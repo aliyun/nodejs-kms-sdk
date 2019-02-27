@@ -16,15 +16,56 @@ npm install @alicloud/kms-sdk
 
 ## Usage
 
+### Client with accessKeyId & accessKeySecret
+
 ```js
 const KmsClient = require('@alicloud/kms-sdk');
-
-const kms = new KmsClient({
+const client = new KmsClient({
   endpoint: 'kms.cn-hangzhou.aliyuncs.com', // check this from kms console
   accessKey: '***************', // check this from aliyun console
   secretKey: '***************', // check this from aliyun console
 });
+```
 
+### Client with sdk credentials
+
+credentials file example (~/.alibabacloud/credentials):
+
+```bash
+[default]
+enable = true
+type = access_key
+access_key_id = ******
+access_key_secret = ******
+
+[kms-demo]
+enable = true
+type = ram_role_arn
+access_key_id = ******
+access_key_secret = ******
+role_arn = acs:ram::******:role/******
+role_session_name = ******
+```
+client example:
+
+```js
+const KmsClient = require('@alicloud/kms-sdk');
+const Credentials = require('@alicloud/credentials');
+const client = new KmsClient({
+  endpoint: 'kms.cn-hangzhou.aliyuncs.com', // check this from kms console
+  credential: new Credentials({ profile: 'kms-demo' })
+});
+```
+
+you can also use custom credential path like:
+
+```bash
+ALIBABA_CLOUD_CREDENTIALS_FILE=/path/to/your/credential node app.js
+```
+
+### Api demo
+
+```js
 async function demo() {
   // describe regions
   const regions = await client.describeRegions();
@@ -315,13 +356,13 @@ You should set environment variables before running the test or coverage. For ex
 * run test
 
 ```
-ACCESS_KEY=<your access key> SECRET_KEY=<your secret key> npm run test
+ACCESS_KEY=<your access key> SECRET_KEY=<your secret key> ENDPOINT=<endpoint> npm run test
 ```
 
 * run code coverage
 
 ```
-ACCESS_KEY=<your access key> SECRET_KEY=<your secret key> npm run cov
+ACCESS_KEY=<your access key> SECRET_KEY=<your secret key> ENDPOINT=<endpoint> npm run cov
 ```
 
 ## License
