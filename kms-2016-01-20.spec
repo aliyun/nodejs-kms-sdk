@@ -11,7 +11,7 @@ module kms {
 
   type @default = (string, string): string
   type @defaultNumber = (number, number): number
-  type @getQuery = (object, $Request): object
+  type @getQuery = async (object, $Request): object
   type @json = async ($Response): object
   type @is5xx = ($Response): boolean
 
@@ -31,11 +31,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -75,11 +74,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -121,11 +119,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -165,11 +162,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -207,11 +203,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -249,11 +244,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -291,11 +285,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -331,11 +324,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -373,11 +365,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -415,11 +406,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -461,11 +451,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -509,11 +498,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -555,11 +543,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -603,11 +590,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -647,11 +633,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -693,11 +678,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -737,11 +721,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -781,11 +764,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
@@ -825,11 +807,10 @@ module kms {
     protocol = 'https';
     method = 'GET';
     pathname = '/';
-    query = @getQuery(query, __request);
-
     headers = {
       host = @endpoint
     };
+    query = @getQuery(query, __request);
   } returns {
     if (@is5xx(__response)) {
       retry;
