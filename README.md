@@ -22,8 +22,8 @@ npm install @alicloud/kms-sdk
 const KmsClient = require('@alicloud/kms-sdk');
 const client = new KmsClient({
   endpoint: 'kms.cn-hangzhou.aliyuncs.com', // check this from kms console
-  accessKey: '***************', // check this from aliyun console
-  secretKey: '***************', // check this from aliyun console
+  accessKeyId: '***************', // check this from aliyun console
+  accessKeySecret: '***************', // check this from aliyun console
 });
 ```
 

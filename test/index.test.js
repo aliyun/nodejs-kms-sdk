@@ -6,8 +6,8 @@ const KmsClient = require('../lib/');
 describe('kms export client should success', function () {
   const client = new KmsClient({
     endpoint: process.env.ENDPOINT,
-    accessKey: process.env.ACCESS_KEY,
-    secretKey: process.env.SECRET_KEY,
+    accessKeyId: process.env.ACCESS_KEY,
+    accessKeySecret: process.env.SECRET_KEY,
     apiVersion: '2016-01-20'
   });
 

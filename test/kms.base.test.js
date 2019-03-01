@@ -12,8 +12,8 @@ describe('kms base client should success', function () {
     try {
       new KmsBaseClient({
         endpoint: 'kms.cn-hangzhou.aliyuncs.com',
-        accessKey: 'xxxxxx',
-        secretKey: 'xxxxxx'
+        accessKeyId: 'xxxxxx',
+        accessKeySecret: 'xxxxxx'
       });
     } catch (e) {
       error = e.message;
@@ -44,18 +44,18 @@ describe('kms base client should success', function () {
       new KmsBaseClient({
         endpoint: 'kms.cn-hangzhou.aliyuncs.com',
         namespace: 'xxxxxx',
-        accessKey: 'xxxxxx',
+        accessKeyId: 'xxxxxx',
       });
     } catch (e) {
       error = e.message;
     }
-    expect(error).to.be('config.secretKey must be passed in');
+    expect(error).to.be('config.accessKeySecret must be passed in');
   });
 
   const client = new KmsBaseClient({
     endpoint: 'kms.cn-hangzhou.aliyuncs.com',
-    accessKey: process.env.ACCESS_KEY,
-    secretKey: process.env.SECRET_KEY
+    accessKeyId: process.env.ACCESS_KEY,
+    accessKeySecret: process.env.SECRET_KEY
   });
 
   it('return correct value', function () {
