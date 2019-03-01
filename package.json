@@ -1,6 +1,6 @@
 {
   "name": "@alicloud/kms-sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "alibaba cloud kms client for node.js",
   "main": "lib/index.js",
   "scripts": {
