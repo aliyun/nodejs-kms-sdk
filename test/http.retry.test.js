@@ -62,8 +62,8 @@ async function createServer(retry) {
 describe('http retry should success', function () {
   const client = new KmsClient({
     endpoint: 'localhost:8443',
-    accessKey: 'access_key',
-    secretKey: 'secret_key'
+    accessKeyId: 'access_key',
+    accessKeySecret: 'secret_key'
   });
   const runtimeOption = { backoff_policy: 'fixed', backoff_period: 10, ignoreSSL: false };
   const authOption = { ignoreSSL: false };

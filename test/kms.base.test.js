@@ -6,14 +6,14 @@ const expect = require('expect.js');
 const KmsBaseClient = require('../lib/kms_base');
 
 describe('kms base client should success', function () {
-  it('init acm base client constructor', async function () {
+  it('init kms base client constructor', async function () {
     // check config
     let error = '';
     try {
       new KmsBaseClient({
         endpoint: 'kms.cn-hangzhou.aliyuncs.com',
-        accessKey: 'xxxxxx',
-        secretKey: 'xxxxxx'
+        accessKeyId: 'xxxxxx',
+        accessKeySecret: 'xxxxxx'
       });
     } catch (e) {
       error = e.message;
@@ -44,18 +44,18 @@ describe('kms base client should success', function () {
       new KmsBaseClient({
         endpoint: 'kms.cn-hangzhou.aliyuncs.com',
         namespace: 'xxxxxx',
-        accessKey: 'xxxxxx',
+        accessKeyId: 'xxxxxx',
       });
     } catch (e) {
       error = e.message;
     }
-    expect(error).to.be('config.secretKey must be passed in');
+    expect(error).to.be('config.accessKeySecret must be passed in');
   });
 
   const client = new KmsBaseClient({
     endpoint: 'kms.cn-hangzhou.aliyuncs.com',
-    accessKey: process.env.ACCESS_KEY,
-    secretKey: process.env.SECRET_KEY
+    accessKeyId: process.env.ACCESS_KEY,
+    accessKeySecret: process.env.SECRET_KEY
   });
 
   it('return correct value', function () {
@@ -97,10 +97,72 @@ describe('kms base client should success', function () {
     expect(client.__is5xx({ statusCode: 501 })).to.be(true);
   });
 
-  it('get query correct', function () {
-    const sign1 = client.__getQuery({}, {});
+  it('get query correct', async function () {
+    const sign1 = await client.__getQuery({}, { headers: {} });
     expect(typeof sign1.Signature).to.be('string');
-    const sign2 = client.__getQuery({}, { method: 'POST' });
+    const sign2 = await client.__getQuery({}, { headers: {}, method: 'POST' });
+    expect(typeof sign2.Signature).to.be('string');
+    expect(sign1 !== sign2).to.be.ok();
+  });
+});
+
+describe('kms base client should success with sts credential', function () {
+  let client2;
+  it('init kms base client constructor', function () {
+    let error = '';
+    try {
+      client2 = new KmsBaseClient({
+        endpoint: 'kms.cn-hangzhou.aliyuncs.com',
+        credential: {
+          getCredential() {
+            return {
+              accessKeyId: '***',
+              accessKeySecret: '***',
+              securityToken: '***'
+            };
+          }
+        }
+      });
+    } catch (e) {
+      error = e.message;
+    }
+    expect(error).to.be('');
+  });
+
+  it('get query correct', async function () {
+    const sign1 = await client2.__getQuery({}, { headers: {} });
+    expect(typeof sign1.Signature).to.be('string');
+    const sign2 = await client2.__getQuery({}, { headers: {}, method: 'POST' });
+    expect(typeof sign2.Signature).to.be('string');
+    expect(sign1 !== sign2).to.be.ok();
+  });
+});
+
+describe('kms base client should success with bearer token', function () {
+  let client2;
+  it('init kms base client constructor', function () {
+    let error = '';
+    try {
+      client2 = new KmsBaseClient({
+        endpoint: 'kms.cn-hangzhou.aliyuncs.com',
+        credential: {
+          getCredential() {
+            return {
+              bearerToken: '***'
+            };
+          }
+        }
+      });
+    } catch (e) {
+      error = e.message;
+    }
+    expect(error).to.be('');
+  });
+
+  it('get query correct', async function () {
+    const sign1 = await client2.__getQuery({}, { headers: {} });
+    expect(typeof sign1.Signature).to.be('string');
+    const sign2 = await client2.__getQuery({}, { headers: {}, method: 'POST' });
     expect(typeof sign2.Signature).to.be('string');
     expect(sign1 !== sign2).to.be.ok();
   });
